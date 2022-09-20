@@ -2,6 +2,7 @@
   --primary-color: black;
   --green: #2b5c8d;
   --base-width: 73%;
+  --body-text-color: rgba(255, 255, 255, 0.5);
 }
 
 * {
