@@ -1,0 +1,82 @@
+.main--game {
+  background-color: rgba($color: #fff, $alpha: 0.05);
+  width: 27.8rem;
+  height: 27.3rem;
+  margin: 1rem 0.8rem;
+  border-radius: 5px;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+.main--game--img {
+  height: 60%;
+  img {
+    object-fit: cover;
+    width: 100%;
+    border-radius: 5px;
+  }
+}
+.main--game--info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 40%;
+  padding: 1.5rem;
+}
+.main--game--info--item__title {
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--body-text-color);
+  margin: 0;
+  padding-right: 4rem;
+}
+.main--game--info--item__title:after {
+  content: 'FREE';
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: #fff;
+  background-color: #4799eb;
+  font-size: 1.1rem;
+  font-weight: 700;
+  padding: 4px;
+  border-radius: 6px;
+}
+.main--game--info--item__desc {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 1.4rem;
+  font-weight: normal;
+  color: rgba(255, 255, 255, 0.4);
+  margin: 0;
+}
+.main--game--info--item__foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.main--game--info--item__foot--item {
+  svg {
+    color: rgba($color: #fff, $alpha: 0.5);
+    font-size: 1.5rem;
+    width: 100%;
+  }
+}
+.main--game--info--item__foot--item__right {
+  display: flex;
+  justify-content: space-between;
+}
+.main--game--info--item__foot--item__right--genre {
+  color: #000;
+  background-color: rgba($color: #fff, $alpha: 0.3);
+  font-size: 1.1rem;
+  font-weight: 700;
+  padding: 3px;
+  border-radius: 6px;
+}
+.main--game--info--item__foot--item__right--flatform {
+  margin-left: 1rem;
+}

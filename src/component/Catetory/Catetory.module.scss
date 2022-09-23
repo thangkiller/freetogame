@@ -1,0 +1,72 @@
+.sidebar--group {
+  background-color: rgba($color: #fff, $alpha: 0.05);
+  margin-bottom: 5rem;
+  border-radius: 5px;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+.sidebar--group--title {
+  cursor: pointer;
+  position: relative;
+  background-color: rgba(0, 0, 0, 0.5);
+  height: 5rem;
+  border-radius: 5px;
+  padding: 0 1.7rem;
+  button {
+    cursor: pointer;
+    font-size: 1.5rem;
+    background-color: transparent;
+    color: var(--body-text-color);
+    height: 100%;
+    border-style: none;
+    padding: 0;
+  }
+  svg {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--body-text-color);
+  }
+}
+.sidebar--group--select {
+  padding: 3rem 1.5rem;
+  ul {
+    list-style-type: none;
+    padding: 0;
+    li {
+      display: flex;
+      margin: 5px 0;
+      input {
+        cursor: pointer;
+        margin-right: 5px;
+      }
+      span {
+        font-size: 1.5rem;
+        color: var(--body-text-color);
+      }
+    }
+  }
+}
+.sidebar--group--select--title {
+  position: relative;
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--body-text-color);
+  padding-bottom: 5px;
+}
+.sidebar--group--select--title::after {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  content: '';
+  width: 20%;
+  height: 2px;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+.sidebar--group--select__scroll {
+  ul {
+    height: 18rem;
+    overflow-y: scroll;
+  }
+}
