@@ -5,7 +5,7 @@ import { faUpDown } from '@fortawesome/free-solid-svg-icons';
 
 const cx = classNames.bind(styles);
 
-function Catetory({ titled = true, scrolling = false, group }) {
+function Catetory({ titled, scrolling = false, group, select }) {
   const selectStyle = cx('sidebar--group--select', {
     'sidebar--group--select__scroll': scrolling,
   });
@@ -28,7 +28,10 @@ function Catetory({ titled = true, scrolling = false, group }) {
               {item.types.map((type, index) => {
                 return (
                   <li key={index}>
-                    <input type="checkbox" />
+                    <input
+                      type="checkbox"
+                      onClick={() => select(group.name, type)}
+                    />
                     <span>{type}</span>
                   </li>
                 );

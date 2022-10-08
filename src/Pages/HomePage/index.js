@@ -1,97 +1,63 @@
+import { useState } from 'react';
 import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark } from '@fortawesome/free-regular-svg-icons';
-import styles from './Home.module.scss';
 import { Games, Catetory } from '~/component';
+import { sidebarList, TYPES } from './sidebarList';
+import styles from './Home.module.scss';
 
 const cx = classNames.bind(styles);
 
-const platform = {
-  title: 'Sort By',
-  content: [
-    {
-      name: 'Platform',
-      types: ['PC', 'Browser'],
-    },
-  ],
-};
-
-const genres = {
-  title: 'Filter Type',
-  content: [
-    {
-      name: 'Genre',
-      types: [
-        'MMO',
-        'MMORPG',
-        'Shooter',
-        'Strategy',
-        'Moba',
-        'Battle Royale',
-        'Card',
-        'Racing',
-        'Sports',
-        'Social',
-        'Fighting',
-      ],
-    },
-  ],
-};
-
-const catetory = {
-  content: [
-    {
-      name: 'Graphics',
-      types: ['3D Graphics', '2D Graphics'],
-    },
-    {
-      name: 'Combat',
-      types: ['PVE', 'PVP'],
-    },
-    {
-      name: 'Gameplay',
-      types: ['Turn-Based', 'Real-Time'],
-    },
-    {
-      name: 'Setting',
-      types: ['Anime', 'Fantasy', 'Sci-Fi', 'Military', 'Horror'],
-    },
-  ],
-};
-
-const tags = {
-  content: [
-    {
-      name: 'Tags',
-      types: [
-        'MMOFPS',
-        'Sandbox',
-        'Open World',
-        'Survival',
-        'Action RPG',
-        'MMORTS',
-        'Pixel',
-        'Voxel',
-        'MMOTPS',
-        'Zombie',
-        'First-Person',
-        'Top-Down',
-        'Tank',
-        'Space',
-        'Sailing',
-        'Side Scroller',
-        'Superhero',
-        'Permadeath',
-        'Action',
-        'Martial Arts',
-        'Flight',
-        'Low-Spec',
-      ],
-    },
-  ],
-};
-
 function HomePage() {
+  const [selected, setSelected] = useState({});
+  console.log('type', selected);
+  const handlerSelect = (type, feature) => {
+    const handlerType = (TYPE, feature) => {
+      const hasType = selected[TYPE] !== undefined;
+      if (!hasType) {
+        setSelected({
+          ...selected,
+          [TYPE]: [feature],
+        });
+        return;
+      }
+      const types = selected[TYPE];
+      let newTypes = [];
+      const endIndex = types.length - 1;
+      if (endIndex === -1) {
+        setSelected({
+          ...selected,
+          [TYPE]: [feature],
+        });
+      } else {
+        for (let i = 0; ; i++) {
+          const isEnd = i === endIndex;
+          const isExit = types[i] === feature;
+          if (isExit) {
+            newTypes.push(...types.slice(i + 1, 100));
+            break;
+          } else {
+            if (isEnd) {
+              newTypes.push(types[i], feature);
+              break;
+            } else {
+              newTypes.push(types[i]);
+            }
+          }
+        }
+        setSelected({
+          ...selected,
+          [TYPE]: newTypes,
+        });
+      }
+    };
+    for (const TYPE of TYPES) {
+      if (TYPE === type) {
+        handlerType(TYPE, feature);
+        break;
+      }
+    }
+  };
   return (
     <div className={cx('wrapper')}>
       <div className={cx('grid')}>
@@ -106,10 +72,17 @@ function HomePage() {
           </div>
         </div>
         <div className={cx('sidebar')}>
-          <Catetory group={platform} />
-          <Catetory group={genres} scrolling />
-          <Catetory group={catetory} titled={false} />
-          <Catetory group={tags} titled={false} scrolling />
+          {sidebarList.map(group => {
+            return (
+              <Catetory
+                key={group.id}
+                group={group}
+                titled={group.title}
+                scrolling={group.scroll}
+                select={(type, feature) => handlerSelect(type, feature)}
+              />
+            );
+          })}
         </div>
         <div className={cx('main')}>
           <Games />
