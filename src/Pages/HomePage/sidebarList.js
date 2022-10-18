@@ -2,6 +2,7 @@ const sidebarList = [
   {
     id: 1,
     name: 'platform',
+    queryField: 'platform',
     title: 'Sort By',
     content: [
       {
@@ -13,6 +14,7 @@ const sidebarList = [
   {
     id: 2,
     name: 'genres',
+    queryField: 'category',
     title: 'Filter Type',
     scroll: true,
     content: [
@@ -36,7 +38,8 @@ const sidebarList = [
   },
   {
     id: 3,
-    name: 'catetory',
+    name: 'category',
+    queryField: 'category',
     content: [
       {
         name: 'Graphics',
@@ -59,6 +62,7 @@ const sidebarList = [
   {
     id: 4,
     name: 'tags',
+    queryField: 'category',
     scroll: true,
     content: [
       {
@@ -91,6 +95,6 @@ const sidebarList = [
     ],
   },
 ];
-const TYPES = ['platform', 'genres', 'catetory', 'tags'];
+const TYPES = ['platform', 'category'];
 
 export { sidebarList, TYPES };

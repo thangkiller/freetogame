@@ -2,7 +2,7 @@ import { useState } from 'react';
 import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark } from '@fortawesome/free-regular-svg-icons';
-import { Games, Catetory } from '~/component';
+import { Games, Category } from '~/component';
 import { sidebarList, TYPES } from './sidebarList';
 import styles from './Home.module.scss';
 
@@ -10,7 +10,6 @@ const cx = classNames.bind(styles);
 
 function HomePage() {
   const [selected, setSelected] = useState({});
-  console.log('type', selected);
   const handlerSelect = (type, feature) => {
     const handlerType = (TYPE, feature) => {
       const hasType = selected[TYPE] !== undefined;
@@ -74,7 +73,7 @@ function HomePage() {
         <div className={cx('sidebar')}>
           {sidebarList.map(group => {
             return (
-              <Catetory
+              <Category
                 key={group.id}
                 group={group}
                 titled={group.title}
@@ -85,7 +84,7 @@ function HomePage() {
           })}
         </div>
         <div className={cx('main')}>
-          <Games />
+          <Games filter={selected} />
         </div>
       </div>
     </div>

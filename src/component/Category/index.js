@@ -30,7 +30,7 @@ function Catetory({ titled, scrolling = false, group, select }) {
                   <li key={index}>
                     <input
                       type="checkbox"
-                      onClick={() => select(group.name, type)}
+                      onClick={() => select(group.queryField, type)}
                     />
                     <span>{type}</span>
                   </li>
