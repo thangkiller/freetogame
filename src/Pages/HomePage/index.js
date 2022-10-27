@@ -7,56 +7,52 @@ import { sidebarList, TYPES } from './sidebarList';
 import styles from './Home.module.scss';
 
 const cx = classNames.bind(styles);
+const seperatorSelections = '.';
+const seperatorFilters = '&';
 
 function HomePage() {
-  const [selected, setSelected] = useState({});
-  const handlerSelect = (type, feature) => {
-    const handlerType = (TYPE, feature) => {
-      const hasType = selected[TYPE] !== undefined;
-      if (!hasType) {
-        setSelected({
-          ...selected,
-          [TYPE]: [feature],
-        });
-        return;
-      }
-      const types = selected[TYPE];
-      let newTypes = [];
-      const endIndex = types.length - 1;
-      if (endIndex === -1) {
-        setSelected({
-          ...selected,
-          [TYPE]: [feature],
-        });
-      } else {
-        for (let i = 0; ; i++) {
-          const isEnd = i === endIndex;
-          const isExit = types[i] === feature;
-          if (isExit) {
-            newTypes.push(...types.slice(i + 1, 100));
-            break;
-          } else {
-            if (isEnd) {
-              newTypes.push(types[i], feature);
-              break;
-            } else {
-              newTypes.push(types[i]);
-            }
-          }
-        }
-        setSelected({
-          ...selected,
-          [TYPE]: newTypes,
-        });
-      }
+  function filter(name, selection) {
+    this.name = name;
+    this.selections = [selection];
+    this.includedSelection = selection => {
+      return this.selections.includes(selection);
     };
-    for (const TYPE of TYPES) {
-      if (TYPE === type) {
-        handlerType(TYPE, feature);
-        break;
+    this.hasSelections = this.selections.length >= 2;
+    this.append = selection => {
+      if (!this.includedSelection(selection)) {
+        this.selections.push(selection);
       }
+      console.log(this);
+      return this;
+    };
+    this.join = seperator => {
+      return `${this.name}=${this.selections.join(seperator)}`;
+    };
+  }
+  const [filters, setFilters] = useState([]);
+  const insertSelection = (type, feature) => {
+    const filterIndex = filters.findIndex(filter => filter.name === type);
+    console.log(filterIndex);
+    const checkTypeInFilters = filterIndex => {};
+    const notTypeInFilters = -1;
+    if (filterIndex === notTypeInFilters) {
+      setFilters([...filters, new filter(type, feature)]);
+      console.log('lenh 1');
+    } else {
+      console.log('lenh 2', [...[{ t: 1 }], { t: 1 }]);
+      setFilters([...filters, filters[filterIndex].append(feature)]);
     }
   };
+  const transformFilterToString = filters => {
+    const th = filters.map(filter => {
+      const t = filter.join(seperatorSelections);
+      // console.log(t);
+      return t;
+    });
+    return th.join(seperatorFilters);
+  };
+  const hasTags = filters.some(filter => filter.hasSelections);
+  // console.log(transformFilterToString(filters));
   return (
     <div className={cx('wrapper')}>
       <div className={cx('grid')}>
@@ -78,13 +74,13 @@ function HomePage() {
                 group={group}
                 titled={group.title}
                 scrolling={group.scroll}
-                select={(type, feature) => handlerSelect(type, feature)}
+                select={(type, feature) => insertSelection(type, feature)}
               />
             );
           })}
         </div>
         <div className={cx('main')}>
-          <Games filter={selected} />
+          <Games filtersString={'thanhcomg'} mutiTag={hasTags} />
         </div>
       </div>
     </div>

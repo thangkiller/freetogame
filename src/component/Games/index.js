@@ -11,7 +11,7 @@ import { faWindows } from '@fortawesome/free-brands-svg-icons';
 
 const cx = classNames.bind(styles);
 
-function Games({ filter }) {
+function Games({ filtersString, mutiTag }) {
   const [games, setGames] = useState([]);
   const hasGame = games.status !== 0;
   const standardContent = contentQuery => {
@@ -20,44 +20,19 @@ function Games({ filter }) {
       .replace(/ /g, '-')
       .replace(/-graphics/g, '');
   };
-  const setQuery = (isMutipleSelectInTag, contentQuery) => {
-    if (isMutipleSelectInTag) {
-      return 'filter?' + contentQuery.replace('category', 'tag');
-    }
-    return 'games?' + contentQuery;
+  const handlerQuery = filtersString => {
+    const typeQuery = mutiTag ? 'filter?' : 'games?';
+    const contentQuery = standardContent(filtersString);
+    return typeQuery + contentQuery;
   };
-  const handlerQuery = filter => {
-    let contentQuery = '';
-    let isMutipleSelectInTag = false;
-    let isTagOne = true;
-    for (const key in filter) {
-      if (!isTagOne) {
-        contentQuery += '&';
-      } else {
-        isTagOne = false;
-      }
-      switch (filter[key].length) {
-        case 0:
-          break;
-        case 1:
-          contentQuery += `${key}=${filter[key][0]}`;
-          break;
-        default:
-          isMutipleSelectInTag = true;
-          contentQuery += `${key}=${filter[key].join('.')}`;
-          break;
-      }
-    }
-    contentQuery = standardContent(contentQuery);
-    return setQuery(isMutipleSelectInTag, contentQuery);
-  };
-  let game_url = 'https://www.freetogame.com/api/' + handlerQuery(filter);
-  useEffect(() => {
-    fetch(game_url)
-      .then(res => res.json())
-      .then(data => setGames(data))
-      .catch(error => console.log(error));
-  }, [game_url]);
+  let game_url =
+    'https://www.freetogame.com/api/' + handlerQuery(filtersString);
+  // useEffect(() => {
+  //   fetch(game_url)
+  //     .then(res => res.json())
+  //     .then(data => setGames(data))
+  //     .catch(error => console.log(error));
+  // }, [game_url]);
   return (
     <Fragment>
       {hasGame &&
