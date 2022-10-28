@@ -11,6 +11,7 @@ const seperatorSelections = '.';
 const seperatorFilters = '&';
 
 function HomePage() {
+  const [filters, setFilters] = useState([]);
   function filter(name, selection) {
     this.name = name;
     this.selections = [selection];
@@ -22,37 +23,40 @@ function HomePage() {
       if (!this.includedSelection(selection)) {
         this.selections.push(selection);
       }
-      console.log(this);
       return this;
     };
     this.join = seperator => {
       return `${this.name}=${this.selections.join(seperator)}`;
     };
   }
-  const [filters, setFilters] = useState([]);
-  const insertSelection = (type, feature) => {
-    const filterIndex = filters.findIndex(filter => filter.name === type);
-    console.log(filterIndex);
-    const checkTypeInFilters = filterIndex => {};
-    const notTypeInFilters = -1;
-    if (filterIndex === notTypeInFilters) {
-      setFilters([...filters, new filter(type, feature)]);
-      console.log('lenh 1');
+  function insertSelectionInFilters(feature, type) {
+    const selectionFilterIndex = findFilterIndexOfSelection(type);
+    const notTypeInFilters = selectionFilterIndex === -1;
+    if (notTypeInFilters) {
+      insertNewTypeToFilters(feature, type);
     } else {
-      console.log('lenh 2', [...[{ t: 1 }], { t: 1 }]);
-      setFilters([...filters, filters[filterIndex].append(feature)]);
+      insertSelectionInSelectedFilter(selectionFilterIndex, feature);
     }
-  };
-  const transformFilterToString = filters => {
+  }
+  function findFilterIndexOfSelection(type) {
+    return filters.findIndex(filter => filter.name === type);
+  }
+  function insertNewTypeToFilters(feature, type) {
+    setFilters([...filters, new filter(type, feature)]);
+  }
+  function insertSelectionInSelectedFilter(selectedFilterIndex, selection) {
+    filters[selectedFilterIndex].append(selection);
+    setFilters(filters);
+  }
+  function transformFilterToString(filters) {
     const th = filters.map(filter => {
       const t = filter.join(seperatorSelections);
-      // console.log(t);
       return t;
     });
     return th.join(seperatorFilters);
-  };
+  }
+  console.log(transformFilterToString(filters));
   const hasTags = filters.some(filter => filter.hasSelections);
-  // console.log(transformFilterToString(filters));
   return (
     <div className={cx('wrapper')}>
       <div className={cx('grid')}>
@@ -74,7 +78,9 @@ function HomePage() {
                 group={group}
                 titled={group.title}
                 scrolling={group.scroll}
-                select={(type, feature) => insertSelection(type, feature)}
+                select={(feature, type) =>
+                  insertSelectionInFilters(feature, type)
+                }
               />
             );
           })}
