@@ -3,7 +3,7 @@ import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark } from '@fortawesome/free-regular-svg-icons';
 import { Games, Category } from '~/component';
-import { sidebarList, TYPES } from './sidebarList';
+import { sidebarList } from './sidebarList';
 import styles from './Home.module.scss';
 
 const cx = classNames.bind(styles);
@@ -16,26 +16,37 @@ function HomePage() {
     this.name = name;
     this.selections = [selection];
     this.includedSelection = selection => {
+      console.log(this.selections.length);
       return this.selections.includes(selection);
     };
     this.hasSelections = this.selections.length >= 2;
-    this.append = selection => {
-      if (!this.includedSelection(selection)) {
-        this.selections.push(selection);
+    this.appendSelection = selection => {
+      this.selections.push(selection);
+    };
+    this.removeSelection = selectionNeedDeleted => {
+      this.selections = this.selections.filter(
+        selection => selection !== selectionNeedDeleted
+      );
+    };
+    this.switchSelection = selection => {
+      if (this.includedSelection(selection)) {
+        this.removeSelection(selection);
+      } else {
+        this.appendSelection(selection);
       }
-      return this;
     };
     this.join = seperator => {
       return `${this.name}=${this.selections.join(seperator)}`;
     };
   }
-  function insertSelectionInFilters(feature, type) {
+  function handlerSelection(feature, type) {
     const selectionFilterIndex = findFilterIndexOfSelection(type);
     const notTypeInFilters = selectionFilterIndex === -1;
     if (notTypeInFilters) {
       insertNewTypeToFilters(feature, type);
     } else {
-      insertSelectionInSelectedFilter(selectionFilterIndex, feature);
+      filters[selectionFilterIndex].switchSelection(feature);
+      setFilters([...filters]);
     }
   }
   function findFilterIndexOfSelection(type) {
@@ -44,19 +55,15 @@ function HomePage() {
   function insertNewTypeToFilters(feature, type) {
     setFilters([...filters, new filter(type, feature)]);
   }
-  function insertSelectionInSelectedFilter(selectedFilterIndex, selection) {
-    filters[selectedFilterIndex].append(selection);
-    setFilters(filters);
-  }
   function transformFilterToString(filters) {
-    const th = filters.map(filter => {
-      const t = filter.join(seperatorSelections);
-      return t;
+    const selectionStringList = filters.map(filter => {
+      const selectionString = filter.join(seperatorSelections);
+      return selectionString;
     });
-    return th.join(seperatorFilters);
+    return selectionStringList.join(seperatorFilters);
   }
-  console.log(transformFilterToString(filters));
   const hasTags = filters.some(filter => filter.hasSelections);
+  console.log(hasTags);
   return (
     <div className={cx('wrapper')}>
       <div className={cx('grid')}>
@@ -78,15 +85,16 @@ function HomePage() {
                 group={group}
                 titled={group.title}
                 scrolling={group.scroll}
-                select={(feature, type) =>
-                  insertSelectionInFilters(feature, type)
-                }
+                select={(feature, type) => handlerSelection(feature, type)}
               />
             );
           })}
         </div>
         <div className={cx('main')}>
-          <Games filtersString={'thanhcomg'} mutiTag={hasTags} />
+          <Games
+            filtersString={transformFilterToString(filters)}
+            mutiTag={'hasTags'}
+          />
         </div>
       </div>
     </div>

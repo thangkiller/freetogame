@@ -95,6 +95,5 @@ const sidebarList = [
     ],
   },
 ];
-const TYPES = ['platform', 'category'];
 
-export { sidebarList, TYPES };
+export { sidebarList };
