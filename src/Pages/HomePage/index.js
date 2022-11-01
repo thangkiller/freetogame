@@ -16,10 +16,9 @@ function HomePage() {
     this.name = name;
     this.selections = [selection];
     this.includedSelection = selection => {
-      console.log(this.selections.length);
       return this.selections.includes(selection);
     };
-    this.hasSelections = this.selections.length >= 2;
+    this.hasSelections = () => this.selections.length >= 2;
     this.appendSelection = selection => {
       this.selections.push(selection);
     };
@@ -62,8 +61,7 @@ function HomePage() {
     });
     return selectionStringList.join(seperatorFilters);
   }
-  const hasTags = filters.some(filter => filter.hasSelections);
-  console.log(hasTags);
+  const hasTags = filters.some(filter => filter.hasSelections());
   return (
     <div className={cx('wrapper')}>
       <div className={cx('grid')}>
@@ -93,7 +91,7 @@ function HomePage() {
         <div className={cx('main')}>
           <Games
             filtersString={transformFilterToString(filters)}
-            mutiTag={'hasTags'}
+            mutiTag={hasTags}
           />
         </div>
       </div>

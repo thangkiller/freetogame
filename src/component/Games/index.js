@@ -14,25 +14,32 @@ const cx = classNames.bind(styles);
 function Games({ filtersString, mutiTag }) {
   const [games, setGames] = useState([]);
   const hasGame = games.status !== 0;
-  const standardContent = contentQuery => {
-    return contentQuery
+  let game_url = 'https://www.freetogame.com/api/' + handlerQuery();
+  function handlerQuery() {
+    return handlerTypeQuery() + handlerContentQuery();
+  }
+  function handlerTypeQuery() {
+    return mutiTag ? 'filter?' : 'games?';
+  }
+  function handlerContentQuery() {
+    let contentQuery = standardContentQuery(filtersString);
+    if (mutiTag) {
+      return contentQuery.replace('category', 'tag');
+    }
+    return contentQuery;
+  }
+  function standardContentQuery() {
+    return filtersString
       .toLowerCase()
       .replace(/ /g, '-')
       .replace(/-graphics/g, '');
-  };
-  const handlerQuery = filtersString => {
-    const typeQuery = mutiTag ? 'filter?' : 'games?';
-    const contentQuery = standardContent(filtersString);
-    return typeQuery + contentQuery;
-  };
-  let game_url =
-    'https://www.freetogame.com/api/' + handlerQuery(filtersString);
-  // useEffect(() => {
-  //   fetch(game_url)
-  //     .then(res => res.json())
-  //     .then(data => setGames(data))
-  //     .catch(error => console.log(error));
-  // }, [game_url]);
+  }
+  useEffect(() => {
+    fetch(game_url)
+      .then(res => res.json())
+      .then(data => setGames(data))
+      .catch(error => console.log(error));
+  }, [game_url]);
   return (
     <Fragment>
       {hasGame &&
