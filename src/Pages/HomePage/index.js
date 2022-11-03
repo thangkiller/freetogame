@@ -19,6 +19,7 @@ function HomePage() {
       return this.selections.includes(selection);
     };
     this.hasSelections = () => this.selections.length >= 2;
+    this.isEmpty = () => this.selections.length === 0;
     this.appendSelection = selection => {
       this.selections.push(selection);
     };
@@ -40,19 +41,35 @@ function HomePage() {
   }
   function handlerSelection(feature, type) {
     const selectionFilterIndex = findFilterIndexOfSelection(type);
-    const notTypeInFilters = selectionFilterIndex === -1;
-    if (notTypeInFilters) {
-      insertNewTypeToFilters(feature, type);
-    } else {
-      filters[selectionFilterIndex].switchSelection(feature);
-      setFilters([...filters]);
+    const notTypeInFilters = -1;
+    switch (selectionFilterIndex) {
+      case notTypeInFilters:
+        insertNewFilterToFilters(feature, type);
+        break;
+      default:
+        handlerClickedFilterAndSwitchSelection(
+          filters[selectionFilterIndex],
+          feature
+        );
+        break;
     }
   }
   function findFilterIndexOfSelection(type) {
     return filters.findIndex(filter => filter.name === type);
   }
-  function insertNewTypeToFilters(feature, type) {
+  function insertNewFilterToFilters(feature, type) {
     setFilters([...filters, new filter(type, feature)]);
+  }
+  function handlerClickedFilterAndSwitchSelection(clickedFilter, selection) {
+    clickedFilter.switchSelection(selection);
+    if (clickedFilter.isEmpty()) {
+      removeFilterInFiltersAndSetFilters(clickedFilter);
+    } else {
+      setFilters([...filters]);
+    }
+  }
+  function removeFilterInFiltersAndSetFilters(clickedFilter) {
+    setFilters(filters.filter(filter => filter !== clickedFilter));
   }
   function transformFilterToString(filters) {
     const selectionStringList = filters.map(filter => {
@@ -62,6 +79,7 @@ function HomePage() {
     return selectionStringList.join(seperatorFilters);
   }
   const hasTags = filters.some(filter => filter.hasSelections());
+  console.log(transformFilterToString(filters));
   return (
     <div className={cx('wrapper')}>
       <div className={cx('grid')}>
